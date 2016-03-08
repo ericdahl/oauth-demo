@@ -12,8 +12,8 @@ public class TokenService {
 
     private final Map<String, Token> tokens = new HashMap<String, Token>();
 
-    public Token generate() {
-        Token token = new Token(UUID.randomUUID().toString());
+    public Token generate(String clientId) {
+        Token token = new Token(UUID.randomUUID().toString(), clientId);
         tokens.put(token.getAccessToken(), token);
         return token;
     }
