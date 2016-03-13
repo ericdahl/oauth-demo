@@ -1,12 +1,17 @@
 package example;
 
+import example.exceptions.AuthorizationException;
 import example.exceptions.MissingAuthorizationHeaderException;
 import example.model.App;
 import example.model.Token;
 import example.model.TokenResponse;
+import example.model.User;
 import example.service.AppService;
 import example.service.TokenService;
+import example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.regex.Matcher;
@@ -17,11 +22,15 @@ public class OAuthController {
 
     private final TokenService tokenService;
     private final AppService appService;
+    private final UserService userService;
 
     @Autowired
-    public OAuthController(TokenService tokenService, AppService appService) {
+    public OAuthController(final TokenService tokenService,
+                           final AppService appService,
+                           final UserService userService) {
         this.tokenService = tokenService;
         this.appService = appService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/token",
@@ -29,6 +38,17 @@ public class OAuthController {
                     params = {"grant_type=client_credentials", "client_id", "client_secret"})
     public TokenResponse clientCredentials(@RequestParam("client_id") String clientId) {
         return new TokenResponse(tokenService.generate(clientId));
+    }
+
+    @RequestMapping(value = "/token",
+            method = RequestMethod.POST,
+            params = {"grant_type=password", "username", "password"},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public TokenResponse passwordToken(@RequestParam("username") final String username,
+                                       @RequestParam("password") final String password) {
+        final User user = userService.authenticate(username, password);
+//        return new TokenResponse(tokenService.generate(clientId));
+        return new TokenResponse("123");
     }
 
     @RequestMapping(value = "/apps/{appId}",
@@ -55,5 +75,11 @@ public class OAuthController {
 
 
         return app;
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public void handleError(AuthorizationException e) {
     }
 }

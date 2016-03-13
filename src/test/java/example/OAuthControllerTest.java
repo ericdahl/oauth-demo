@@ -54,8 +54,21 @@ public class OAuthControllerTest {
                     .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("myapp")));
+    }
 
+    @Test
+    public void shouldGetPasswordToken() throws Exception {
+        getPasswordToken("myusername", "mypassword");
+    }
 
+    @Test
+    public void shouldErrorOnBadPassword() throws Exception {
+
+        mockMvc.perform(post("/token")
+                .param("grant_type", "password")
+                .param("username", "myusername")
+                .param("password", "invalid"))
+                .andExpect(status().isUnauthorized());
     }
 
     private Token getToken(final String clientId,
@@ -65,6 +78,23 @@ public class OAuthControllerTest {
                 .param("grant_type", grantType)
                 .param("client_id", clientId)
                 .param("client_secret", clientSecret))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.access_token", is(notNullValue())))
+                .andReturn().getResponse().getContentAsString();
+
+        Token token = objectMapper.readValue(response, Token.class);
+
+        return token;
+    }
+
+    private Token getPasswordToken(final String username,
+                                   final String password) throws Exception {
+        String response = mockMvc.perform(post("/token")
+                .param("grant_type", "password")
+                .param("username", username)
+                .param("password", password))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
