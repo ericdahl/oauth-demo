@@ -80,8 +80,5 @@ public class OAuthController {
     }
 
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public void handleError(AuthorizationException e) {
-    }
+
 }

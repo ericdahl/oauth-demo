@@ -1,5 +1,6 @@
 package example;
 
+import example.exceptions.AuthorizationException;
 import example.exceptions.MissingAuthorizationHeaderException;
 import example.model.Token;
 import example.model.User;
@@ -41,6 +42,9 @@ public class TodoController {
         System.err.println(matcher.group(1));
         Token token = tokenService.validate(matcher.group(1));
         userService.getUser(token.getUsername());
+        if (!username.equals(token.getUsername())) {
+            throw new AuthorizationException("wrong username");
+        }
 
 
         User user = userService.getUser(username);

@@ -58,4 +58,14 @@ public class TodoControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void shouldRefuseToReadOtherUsersTodo() throws Exception {
+        Token token = TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
+
+        mockMvc.perform(get("/otherusername/todos")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 }
