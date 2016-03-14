@@ -13,11 +13,11 @@ public class AppService {
     private final Map<String, App> apps = new HashMap<String, App>();
 
     public AppService() {
-        apps.put("myid", new App("myid", "myapp")); // TODO: remove
+        apps.put("myid", new App("myid", "myapp", "mydeveloperusername")); // TODO: remove
     }
 
-    public App register(String name) {
-        final App app = new App(UUID.randomUUID().toString(), name);
+    public App register(String name, String developerUsername) {
+        final App app = new App(UUID.randomUUID().toString(), name, developerUsername);
         apps.put(app.getClientId(), app);
         return app;
     }

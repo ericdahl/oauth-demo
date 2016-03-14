@@ -6,12 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Token {
     private final String accessToken;
     private final String clientId;
+    private final String username;
 
     @JsonCreator
     public Token(@JsonProperty("access_token") String accessToken,
-                 @JsonProperty("client_id") String clientId) {
+                 @JsonProperty("client_id") String clientId,
+                 @JsonProperty("username") String username) {
         this.accessToken = accessToken;
         this.clientId = clientId;
+        this.username = username;
     }
 
 
@@ -31,4 +34,7 @@ public class Token {
         return clientId;
     }
 
+    public String getUsername() {
+        return username;
+    }
 }

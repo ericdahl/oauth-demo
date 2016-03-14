@@ -1,7 +1,6 @@
 package example.service;
 
 import example.exceptions.NoSuchTokenException;
-import example.model.Scope;
 import example.model.Token;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,8 @@ public class TokenService {
 
     private final Map<String, Token> tokens = new HashMap<String, Token>();
 
-    public Token generate(String clientId) {
-        Token token = new Token(UUID.randomUUID().toString(), clientId);
+    public Token generate(String clientId, String username) {
+        Token token = new Token(UUID.randomUUID().toString(), clientId, username);
         tokens.put(token.getAccessToken(), token);
         return token;
     }

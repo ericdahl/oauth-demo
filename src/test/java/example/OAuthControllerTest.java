@@ -58,7 +58,7 @@ public class OAuthControllerTest {
 
     @Test
     public void shouldGetPasswordToken() throws Exception {
-        getPasswordToken("myusername", "mypassword");
+        TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
     }
 
     @Test
@@ -89,20 +89,4 @@ public class OAuthControllerTest {
         return token;
     }
 
-    private Token getPasswordToken(final String username,
-                                   final String password) throws Exception {
-        String response = mockMvc.perform(post("/token")
-                .param("grant_type", "password")
-                .param("username", username)
-                .param("password", password))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.access_token", is(notNullValue())))
-                .andReturn().getResponse().getContentAsString();
-
-        Token token = objectMapper.readValue(response, Token.class);
-
-        return token;
-    }
 }
