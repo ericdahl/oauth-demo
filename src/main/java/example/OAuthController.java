@@ -9,6 +9,7 @@ import example.model.User;
 import example.service.AppService;
 import example.service.TokenService;
 import example.service.UserService;
+import model.ErrorCode;
 import model.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,7 @@ public class OAuthController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(value = "/token", method = RequestMethod.POST, params = {"!grant_type"})
     public ErrorResponse handleMissingParameter() {
-        throw new ErrorResponseException("invalid_request");
+        throw new ErrorResponseException(ErrorCode.INVALID_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,5 +1,6 @@
 package example.exceptions;
 
+import model.ErrorCode;
 import model.ErrorResponse;
 
 /**
@@ -7,9 +8,9 @@ import model.ErrorResponse;
  */
 public class ErrorResponseException extends RuntimeException {
 
-    private final String error;
+    private final ErrorCode error;
 
-    public ErrorResponseException(final String error) {
+    public ErrorResponseException(final ErrorCode error) {
         this.error = error;
     }
 

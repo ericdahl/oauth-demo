@@ -3,19 +3,16 @@ package model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by ecd on 3/20/16.
- */
 public class ErrorResponse {
-    private final String error;
+    private final ErrorCode error;
 
 
     @JsonCreator
-    public ErrorResponse(@JsonProperty("error") final String error) {
+    public ErrorResponse(@JsonProperty("error") final ErrorCode error) {
         this.error = error;
     }
 
     public String getError() {
-        return error;
+        return error.getMessage();
     }
 }
