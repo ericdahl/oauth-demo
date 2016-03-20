@@ -9,12 +9,14 @@ import model.ErrorResponse;
 public class ErrorResponseException extends RuntimeException {
 
     private final ErrorCode error;
+    private final String description;
 
-    public ErrorResponseException(final ErrorCode error) {
+    public ErrorResponseException(final ErrorCode error, String description) {
         this.error = error;
+        this.description = description;
     }
 
     public ErrorResponse getError() {
-        return new ErrorResponse(error);
+        return new ErrorResponse(error, description);
     }
 }

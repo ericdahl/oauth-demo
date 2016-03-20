@@ -98,7 +98,8 @@ public class OAuthControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.error", is("invalid_request")));
+                .andExpect(jsonPath("$.error", is("invalid_request")))
+                .andExpect(jsonPath("$.error_description", is("Missing mandatory fields [grant_type]")));
 
 
     }

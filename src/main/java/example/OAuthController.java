@@ -58,7 +58,8 @@ public class OAuthController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(value = "/token", method = RequestMethod.POST, params = {"!grant_type"})
     public ErrorResponse handleMissingParameter() {
-        throw new ErrorResponseException(ErrorCode.INVALID_REQUEST);
+
+        throw new ErrorResponseException(ErrorCode.INVALID_REQUEST, "Missing mandatory fields [grant_type]");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
