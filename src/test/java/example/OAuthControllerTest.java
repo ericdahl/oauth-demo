@@ -89,4 +89,18 @@ public class OAuthControllerTest {
         return token;
     }
 
+    @Test
+    public void shouldReturnErrorIfMissingParameters() throws Exception {
+        mockMvc.perform(post("/token")
+//                .param("grant_type", grantType)
+                .param("client_id", "myclient")
+                .param("client_secret", "mysecret"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error", is("invalid_request")));
+
+
+    }
+
 }

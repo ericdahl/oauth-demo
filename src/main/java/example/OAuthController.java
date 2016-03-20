@@ -1,6 +1,6 @@
 package example;
 
-import example.exceptions.AuthorizationException;
+import example.exceptions.ErrorResponseException;
 import example.exceptions.MissingAuthorizationHeaderException;
 import example.model.App;
 import example.model.Token;
@@ -9,6 +9,7 @@ import example.model.User;
 import example.service.AppService;
 import example.service.TokenService;
 import example.service.UserService;
+import model.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,6 +52,18 @@ public class OAuthController {
         Token token = tokenService.generate("myid", user.getUsername());
 
         return new TokenResponse(token);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @RequestMapping(value = "/token", method = RequestMethod.POST, params = {"!grant_type"})
+    public ErrorResponse handleMissingParameter() {
+        throw new ErrorResponseException("invalid_request");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse handleErrorResponse(final ErrorResponseException e) {
+        return e.getError();
     }
 
     @RequestMapping(value = "/apps/{appId}",
