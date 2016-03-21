@@ -7,12 +7,15 @@ public class Token {
     private final String accessToken;
     private final String clientId;
     private final String username;
+    private final TokenType tokenType;
 
     @JsonCreator
     public Token(@JsonProperty("access_token") String accessToken,
+                 @JsonProperty("token_type") String tokenType,
                  @JsonProperty("client_id") String clientId,
                  @JsonProperty("username") String username) {
         this.accessToken = accessToken;
+        this.tokenType = TokenType.getByName(tokenType);
         this.clientId = clientId;
         this.username = username;
     }
@@ -37,4 +40,9 @@ public class Token {
     public String getUsername() {
         return username;
     }
+
+    public TokenType getTokenType() {
+        return tokenType;
+    }
+
 }

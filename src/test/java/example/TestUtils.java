@@ -30,6 +30,7 @@ public class TestUtils {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.access_token", is(notNullValue())))
+                .andExpect(jsonPath("$.token_type", is("bearer")))
                 .andReturn().getResponse().getContentAsString();
 
         Token token = objectMapper.readValue(response, Token.class);
