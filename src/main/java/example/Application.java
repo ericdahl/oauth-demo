@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     // TODO:
-    //  - token expiration
     //  - refresh token
     //  - scopes
     //      - manage resources scope

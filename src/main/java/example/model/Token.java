@@ -60,4 +60,11 @@ public class Token {
         return tokenType;
     }
 
+    private long getExpiresAt() {
+        return generatedAt + expiresIn;
+    }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() > getExpiresAt();
+    }
 }
