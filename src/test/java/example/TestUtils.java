@@ -5,6 +5,7 @@ import example.model.Token;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +31,7 @@ public class TestUtils {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.access_token", is(notNullValue())))
+                .andExpect(jsonPath("$.expires_in", is(greaterThan(10))))
                 .andExpect(jsonPath("$.token_type", is("bearer")))
                 .andReturn().getResponse().getContentAsString();
 

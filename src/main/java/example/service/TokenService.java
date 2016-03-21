@@ -13,7 +13,7 @@ public class TokenService {
     private final Map<String, Token> tokens = new HashMap<String, Token>();
 
     public Token generate(String clientId, String username) {
-        Token token = new Token(UUID.randomUUID().toString(), TokenType.BEARER.getName(), clientId, username);
+        Token token = new Token(UUID.randomUUID().toString(), TokenType.BEARER.getName(), clientId, username, System.currentTimeMillis(), 3600);
         tokens.put(token.getAccessToken(), token);
         return token;
     }
