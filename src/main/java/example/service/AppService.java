@@ -1,5 +1,6 @@
 package example.service;
 
+import example.exceptions.NoSuchAppException;
 import example.model.App;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,12 @@ public class AppService {
     }
 
     public App getById(String clientId) {
-        return apps.get(clientId);
+
+        final App app = apps.get(clientId);
+        if (app == null) {
+            throw new NoSuchAppException("Client id [" + clientId + "] does not exist");
+        }
+        return app;
     }
 
 }

@@ -43,11 +43,21 @@ public class AuthorizeControllerTest {
     public void shouldGetAuthorizationGrant() throws Exception {
         String response = mockMvc.perform(get("/authorize")
                 .param("response_type", "code")
-                .param("client_id", "myclient")
+                .param("client_id", "myid")
                 .param("state", "1234"))
                 .andDo(print())
                 .andExpect(status().isFound())
                 .andReturn().getResponse().getContentAsString();
+    }
 
+    @Test
+    public void shouldRejectUnknownClientId() throws Exception {
+        String response = mockMvc.perform(get("/authorize")
+                .param("response_type", "code")
+                .param("client_id", "invalid")
+                .param("state", "1234"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
     }
 }

@@ -1,5 +1,6 @@
 package example;
 
+import example.model.App;
 import example.service.AppService;
 import example.service.TokenService;
 import example.service.UserService;
@@ -27,7 +28,11 @@ public class AuthorizeController {
     @RequestMapping(value = "/authorize",
                     method = RequestMethod.GET,
                     params = {"response_type=code", "client_id", "state"})
-    public String authorize(HttpSession httpSession) {
+    public String authorize(final HttpSession httpSession,
+                            @RequestParam("client_id") final String clientId) {
+
+        final App clientApp = appService.getById(clientId);
+
 
         String username = (String) httpSession.getAttribute("username");
         if (username != null) {
