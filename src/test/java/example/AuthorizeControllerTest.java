@@ -60,4 +60,28 @@ public class AuthorizeControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
     }
+
+    @Test
+    public void shouldReturnAuthScreenIfLoggedIn() throws Exception {
+        // TODO
+//        String response = mockMvc.perform(post("/login")
+//                    .param("username", "myusername")
+//                    .param("password", "mypassword"))
+//                .andExpect("")
+//                .param("response_type", "code")
+//                .param("client_id", "invalid")
+//                .param("state", "1234"))
+//                .andDo(print())
+//                .andExpect(status().isNotFound())
+//                .andReturn().getResponse().getContentAsString();
+//
+//
+//        String response = mockMvc.perform(get("/authorize")
+//                .param("response_type", "code")
+//                .param("client_id", "invalid")
+//                .param("state", "1234"))
+//                .andDo(print())
+//                .andExpect(status().isNotFound())
+//                .andReturn().getResponse().getContentAsString();
+    }
 }
