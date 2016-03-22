@@ -49,4 +49,16 @@ public class LoginControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
     }
+
+    @Test
+    public void should401BadPassword() throws Exception {
+        String response = mockMvc.perform(post("/login")
+                .param("username", "myusername")
+                .param("password", "invalid"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andReturn().getResponse().getContentAsString();
+    }
+
+
 }
