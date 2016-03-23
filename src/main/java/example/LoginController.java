@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
@@ -28,17 +29,18 @@ public class LoginController {
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/login",
                     method = RequestMethod.POST)
-    public String authorize(final HttpSession httpSession,
+    public void authorize(final HttpSession httpSession,
                             @RequestParam("username") final String username,
                             @RequestParam("password") final String password) {
 
 
         final User user = userService.authenticate(username, password);
-
+        System.err.println("setting session variable");
         httpSession.setAttribute("username", username);
-        return "";
+//        return "sp";
 
     }
 
