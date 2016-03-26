@@ -48,7 +48,7 @@ public class TodoControllerTest {
     public void shouldRejectRequestWithoutAccessToken() throws Exception {
         mockMvc.perform(get("/myusername/todos"))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -71,19 +71,5 @@ public class TodoControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Ignore
-    @Test
-    public void shouldGetTodoViaHttpSession() throws Exception {
-        // TODO
-        String response = mockMvc.perform(post("/login")
-                .param("username", "myusername")
-                .param("password", "mypassword"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
 
-        mockMvc.perform(get("/myusername/todos"))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
-    }
 }

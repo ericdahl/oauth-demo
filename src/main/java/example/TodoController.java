@@ -9,6 +9,7 @@ import example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ public class TodoController {
         this.tokenService = tokenService;
     }
 
-    @RequestMapping(value = "/{username}/todos", method = RequestMethod.GET)
+    @RequestMapping(value = "/{username}/todos", method = RequestMethod.GET, headers = {"Authorization"})
     public List<Todo> getTodos(@PathVariable String username,
                                @RequestHeader("Authorization") final String authorizationHeader) {
 
@@ -47,9 +48,23 @@ public class TodoController {
         }
 
 
+        return getTodosInternal(username);
+    }
+
+    @RequestMapping(value = "/{username}/todos", method = RequestMethod.GET)
+    public List<Todo> getTodos(@PathVariable String username,
+                               HttpSession httpSession) {
+        final String sessionUsername = (String) httpSession.getAttribute("username");
+        if (sessionUsername == null || !sessionUsername.equals(username)) {
+            throw new AuthorizationException("not allowed to access resouce for user");
+        }
+        return getTodosInternal(sessionUsername);
+
+    }
+
+    public List<Todo> getTodosInternal(final String username) {
         User user = userService.getUser(username);
 
         return todoService.getTodos(user);
-
     }
 }

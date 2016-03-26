@@ -1,19 +1,21 @@
 package example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import example.model.Token;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,6 +35,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -103,6 +108,47 @@ public class LoginControllerTest {
         map.add("password", password);
 
         return map;
+    }
+
+    @Test
+    public void shouldGetTodoViaHttpSession() throws Exception {
+        final MultiValueMap<String, String> formData = payload("myusername", "mypassword");
+        final ResponseEntity<String> responseEntity = restTemplate.postForEntity(target + "/login", formData, String.class);
+
+        System.err.println(responseEntity.getHeaders());
+        final String fullCookie = responseEntity.getHeaders().get("Set-Cookie").get(0);
+        assertThat(fullCookie, containsString("JSESSIONID"));
+        final Pattern compile = Pattern.compile("JSESSIONID=([A-Z0-9]+).*");
+        final Matcher matcher = compile.matcher(fullCookie);
+        assertThat(matcher.matches(), is(true));
+        final String cookie = matcher.group(1);
+        System.err.println(fullCookie);
+        System.err.println(cookie);
+
+        restTemplate.setInterceptors(Arrays.<ClientHttpRequestInterceptor>asList(new ClientHttpRequestInterceptor() {
+            @Override
+            public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+                request.getHeaders().add("Cookie", "JSESSIONID=" + cookie);
+                return execution.execute(request, body);
+            }
+        }));
+        final ResponseEntity<String> entity = restTemplate.getForEntity(target + "/myusername/todos", String.class);
+        assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(entity.getHeaders().getContentType().isCompatibleWith(MediaType.APPLICATION_JSON), is(true));
+        String response = entity.getBody();
+        System.err.println(response);
+
+
+
+        // FIXME: broken test
+
+//        List<String> authors = JsonPath.read(entity.getBody(), "$.store.book[*].author");
+
+
+
+//        res.perform(get("/myusername/todos"))
+//                .andDo(print())
+//                .andExpect(status().isUnauthorized());
     }
 
 }
