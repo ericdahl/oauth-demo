@@ -1,0 +1,4 @@
+oauth2:
+  password:
+    auth:
+      url: http://localhost:8080/authenticate
