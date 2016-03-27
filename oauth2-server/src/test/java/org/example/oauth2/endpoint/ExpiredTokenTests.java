@@ -37,7 +37,7 @@ public class ExpiredTokenTests {
 
     @Test
     public void shouldRejectExpiredToken() throws Exception {
-        Token token = TestUtils.getClientCredentialsToken(mockMvc, "myid", "myclientsecret");
+        Token token = TestUtils.getClientCredentialsToken(mockMvc, "myid", "mysecret");
 
 
         Thread.sleep(1000);

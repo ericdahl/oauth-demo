@@ -58,6 +58,18 @@ public class OAuthControllerTest {
     }
 
     @Test
+    public void shouldVerifyClientSecret() throws Exception {
+
+        mockMvc.perform(post("/token")
+                .param("grant_type", "client_credentials")
+                .param("client_id", "myid")
+                .param("client_secret", "invalid"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
     public void shouldGetPasswordToken() throws Exception {
         TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
     }

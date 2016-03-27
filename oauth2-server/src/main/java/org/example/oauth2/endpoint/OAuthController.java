@@ -34,8 +34,10 @@ public class OAuthController {
     @RequestMapping(value = "/token",
                     method = RequestMethod.POST,
                     params = {"grant_type=client_credentials", "client_id", "client_secret"})
-    public TokenResponse clientCredentials(@RequestParam("client_id") String clientId) {
-        return new TokenResponse(tokenService.generate(clientId, appService.getById(clientId).getDeveloperUsername()));
+    public TokenResponse clientCredentials(@RequestParam("client_id") String clientId,
+                                           @RequestParam("client_secret") String clientSecret) {
+        final App app = appService.authenticate(clientId, clientSecret);
+        return new TokenResponse(tokenService.generate(clientId, app.getDeveloperUsername()));
     }
 
     @RequestMapping(value = "/token",
