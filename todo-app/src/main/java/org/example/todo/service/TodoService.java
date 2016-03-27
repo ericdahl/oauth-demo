@@ -11,7 +11,7 @@ public class TodoService {
 
 
     public TodoService() {
-        userTodos.put("myuser", Collections.singletonList(new Todo("first todo")));
+        userTodos.put("myusername", Collections.singletonList(new Todo("first todo")));
     }
 
     public List<Todo> getTodos(String username) {
