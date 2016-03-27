@@ -1,0 +1,4 @@
+- add refresh token support
+- finish authorization token
+- basic auth http header
+- metadata endpoint for tokens
