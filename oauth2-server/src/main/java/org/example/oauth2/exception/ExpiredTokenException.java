@@ -10,4 +10,8 @@ public class ExpiredTokenException extends AuthorizationException {
         super("Token [" + token + "] is expired");
         this.expiredToken = token;
     }
+
+    public Token getExpiredToken() {
+        return expiredToken;
+    }
 }

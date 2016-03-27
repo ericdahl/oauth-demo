@@ -17,14 +17,14 @@ public class Token {
                  @JsonProperty("token_type") String tokenType,
                  @JsonProperty("client_id") String clientId,
                  @JsonProperty("username") String username,
-                 @JsonProperty("generatedAt") long generatedAt,
-                 @JsonProperty("expires_in") long expiresIn) {
+                 @JsonProperty("generatedAt") long generatedAtMillis,
+                 @JsonProperty("expires_in") long expiresInSeconds) {
         this.accessToken = accessToken;
         this.tokenType = TokenType.getByName(tokenType);
         this.clientId = clientId;
         this.username = username;
-        this.generatedAt = generatedAt;
-        this.expiresIn = expiresIn;
+        this.generatedAt = generatedAtMillis;
+        this.expiresIn = expiresInSeconds;
     }
 
 
@@ -61,7 +61,7 @@ public class Token {
     }
 
     private long getExpiresAt() {
-        return generatedAt + expiresIn;
+        return generatedAt + expiresIn * 1000;
     }
 
     public boolean isExpired() {
