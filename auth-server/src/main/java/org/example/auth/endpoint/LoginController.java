@@ -29,14 +29,16 @@ public class LoginController {
                             @RequestParam("username") final String username,
                             @RequestParam("password") final String password) {
 
-
         final User user = userService.authenticate(username, password);
         System.err.println("setting session variable");
         httpSession.setAttribute("username", username);
-//        return "sp";
-
     }
 
-
-
+    @ResponseBody
+    @RequestMapping(value = "/authenticate",
+            method = RequestMethod.POST)
+    public void authenticate(@RequestParam("username") final String username,
+                             @RequestParam("password") final String password) {
+        userService.authenticate(username, password);
+    }
 }

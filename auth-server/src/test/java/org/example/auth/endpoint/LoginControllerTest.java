@@ -68,6 +68,15 @@ public class LoginControllerTest {
         assertThat(responseEntity.getHeaders().get(HttpHeaders.SET_COOKIE).get(0), containsString("JSESSIONID"));
     }
 
+    @Test
+    public void shouldAuthenticate() throws Exception {
+        final MultiValueMap<String, String> formData = payload("myusername", "mypassword");
+        final ResponseEntity<String> responseEntity = restTemplate.postForEntity(target + "/authenticate", formData, String.class);
+
+        System.err.println(responseEntity.getBody());
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    }
+
 
     @Test
     public void should401BadPassword() throws Exception {
