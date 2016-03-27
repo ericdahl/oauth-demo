@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(Application.class)
-public class OAuthControllerTest {
+public class TokenControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
