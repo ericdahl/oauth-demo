@@ -1,3 +1,5 @@
+- resource config
+    - and use map
 - add refresh token support
 - finish authorization token
 - basic auth http header

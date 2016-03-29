@@ -6,10 +6,6 @@ oauth2:
     -
       path: mypath
       target: mytarget
-    -
-      path: mypath
-      target: mytarget
-
-
-#    - one
-#    - two
+#    -
+#      path: mypath
+#      target: mytarget
