@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequestMapping("/oauth")
 @RestController
 public class TokenController {
 

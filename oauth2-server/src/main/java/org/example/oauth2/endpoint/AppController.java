@@ -9,12 +9,12 @@ import org.example.oauth2.service.RemoteUserService;
 import org.example.oauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequestMapping("/oauth")
 @RestController
 public class AppController {
 

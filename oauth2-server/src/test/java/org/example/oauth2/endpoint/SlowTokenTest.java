@@ -40,7 +40,7 @@ public class SlowTokenTest {
 
 
         Thread.sleep(5000);
-        mockMvc.perform(get("/apps/me")
+        mockMvc.perform(get("/oauth/apps/me")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken()))
                 .andDo(print())
                 .andExpect(status().isOk());

@@ -51,7 +51,7 @@ public class TokenControllerTest {
     public void shouldLoadAppWithToken() throws Exception {
         Token token = getToken("myid", "mysecret", "client_credentials");
 
-        mockMvc.perform(get("/apps/me")
+        mockMvc.perform(get("/oauth/apps/me")
                     .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("myapp")));
@@ -60,7 +60,7 @@ public class TokenControllerTest {
     @Test
     public void shouldVerifyClientSecret() throws Exception {
 
-        mockMvc.perform(post("/token")
+        mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "client_credentials")
                 .param("client_id", "myid")
                 .param("client_secret", "invalid"))
@@ -77,7 +77,7 @@ public class TokenControllerTest {
     @Test
     public void shouldErrorOnBadPassword() throws Exception {
 
-        mockMvc.perform(post("/token")
+        mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "password")
                 .param("username", "myusername")
                 .param("password", "invalid"))
@@ -87,7 +87,7 @@ public class TokenControllerTest {
     private Token getToken(final String clientId,
                            final String clientSecret,
                            final String grantType) throws Exception {
-        String response = mockMvc.perform(post("/token")
+        String response = mockMvc.perform(post("/oauth/token")
                 .param("grant_type", grantType)
                 .param("client_id", clientId)
                 .param("client_secret", clientSecret))
@@ -102,7 +102,7 @@ public class TokenControllerTest {
 
     @Test
     public void shouldReturnErrorIfMissingParameters() throws Exception {
-        mockMvc.perform(post("/token")
+        mockMvc.perform(post("/oauth/token")
 //                .param("grant_type", grantType)
                 .param("client_id", "myclient")
                 .param("client_secret", "mysecret"))
@@ -111,8 +111,6 @@ public class TokenControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.error", is("invalid_request")))
                 .andExpect(jsonPath("$.error_description", is("Missing mandatory fields [grant_type]")));
-
-
     }
 
 }

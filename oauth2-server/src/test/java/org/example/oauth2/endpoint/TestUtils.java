@@ -20,7 +20,7 @@ public class TestUtils {
 
     public static Token getPasswordToken(final MockMvc mockMvc, final String username,
                                          final String password) throws Exception {
-        String response = mockMvc.perform(post("/token")
+        String response = mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "password")
                 .param("username", username)
                 .param("password", password))
@@ -39,7 +39,7 @@ public class TestUtils {
 
     public static Token getClientCredentialsToken(final MockMvc mockMvc, final String clientId,
                                          final String clientSecret) throws Exception {
-        String response = mockMvc.perform(post("/token")
+        String response = mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "client_credentials")
                 .param("client_id", clientId)
                 .param("client_secret", clientSecret))

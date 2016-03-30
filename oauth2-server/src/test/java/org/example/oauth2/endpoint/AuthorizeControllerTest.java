@@ -38,7 +38,7 @@ public class AuthorizeControllerTest {
 
     @Test
     public void shouldGetAuthorizationGrant() throws Exception {
-        String response = mockMvc.perform(get("/authorize")
+        String response = mockMvc.perform(get("/oauth/authorize")
                 .param("response_type", "code")
                 .param("client_id", "myid")
                 .param("state", "1234"))
