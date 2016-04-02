@@ -10,8 +10,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "oauth2")
 public class ResourceConfig {
 
-//    List<Resource> resources = new ArrayList<>();
-
     private List<ResourceConfig> resources = new ArrayList<ResourceConfig>();
 
     public List<ResourceConfig> getResources() {

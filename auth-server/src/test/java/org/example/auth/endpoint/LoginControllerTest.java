@@ -26,16 +26,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@WebAppConfiguration
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
 public class LoginControllerTest {
-
-//    @Autowired
-//    private WebApplicationContext webApplicationContext;
-
-//    @Autowired
-//    private ObjectMapper objectMapper;
 
     @Value("http://localhost:${local.server.port}")
     private String target;

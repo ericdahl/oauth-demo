@@ -52,7 +52,7 @@ public class TokenControllerTest {
         Token token = getToken("myid", "mysecret", "client_credentials");
 
         mockMvc.perform(get("/oauth/apps/me")
-                    .header("Authorization", "Bearer " + token.getAccessToken()))
+                .header("Authorization", "Bearer " + token.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("myapp")));
     }
@@ -103,9 +103,9 @@ public class TokenControllerTest {
     @Test
     public void shouldReturnErrorIfMissingParameters() throws Exception {
         mockMvc.perform(post("/oauth/token")
-//                .param("grant_type", grantType)
                 .param("client_id", "myclient")
                 .param("client_secret", "mysecret"))
+                // no grant type
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
