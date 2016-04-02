@@ -1,0 +1,82 @@
+package org.example;
+
+import com.jayway.jsonpath.JsonPath;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebIntegrationTest
+@SpringApplicationConfiguration(Application.class)
+public class DemoTests {
+
+    @Value("http://localhost:${local.server.port}")
+    private String target;
+
+    private RestTemplate restTemplate;
+
+    @Before
+    public void setUp() throws Exception {
+        restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+            @Override
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                // don't throw exceptions so we can more easily assert on them
+                return false;
+            }
+        });
+    }
+
+
+    @Test
+    public void shouldGetToken() throws Exception {
+        getPasswordToken();
+    }
+
+    @Ignore
+    @Test
+    public void shouldGetTodosViaToken() throws Exception {
+
+        String token = getPasswordToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        final HttpEntity httpEntity = new HttpEntity(headers);
+
+
+        final ResponseEntity responseEntity = restTemplate.exchange(target + "/myusername/todos", HttpMethod.GET, httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+    }
+
+    private String getPasswordToken() {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>();
+        form.add("grant_type", "password");
+        form.add("username", "myusername");
+        form.add("password", "mypassword");
+
+        final ResponseEntity<String> res = restTemplate.postForEntity(target + "/oauth/token", form, String.class);
+        assertThat(res.getStatusCode(), is(HttpStatus.OK));
+
+        final String token = JsonPath.read(res.getBody(), "$.access_token");
+        assertThat(token, is(notNullValue()));
+        return token;
+    }
+}
