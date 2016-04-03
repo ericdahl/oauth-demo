@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@RequestMapping("/todos")
 @RestController
 public class TodoController {
 
@@ -44,7 +45,7 @@ public class TodoController {
 
     }
 
-    @RequestMapping(value = "/todos", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public TodoStats getTodos() {
         return todoService.getStats();
     }

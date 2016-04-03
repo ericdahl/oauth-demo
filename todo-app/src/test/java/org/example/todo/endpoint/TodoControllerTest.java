@@ -39,14 +39,14 @@ public class TodoControllerTest {
 
     @Test
     public void shouldRejectRequestWithoutAccessToken() throws Exception {
-        mockMvc.perform(get("/myusername/todos"))
+        mockMvc.perform(get("/todos/myusername/todos"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void shouldAcceptRequestWithAccessToken() throws Exception {
-        mockMvc.perform(get("/myusername/todos")
+        mockMvc.perform(get("/todos/myusername/todos")
 
                 .header("X-username", "myusername"))
                 .andDo(print())
@@ -55,7 +55,7 @@ public class TodoControllerTest {
 
     @Test
     public void shouldRefuseToReadOtherUsersTodo() throws Exception {
-        mockMvc.perform(get("/otherusername/todos")
+        mockMvc.perform(get("/todos/otherusername/todos")
                 .header("X-username", "myusername"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
@@ -63,7 +63,7 @@ public class TodoControllerTest {
 
     @Test
     public void shouldShowStats() throws Exception {
-        mockMvc.perform(get("/todos"))
+        mockMvc.perform(get("/todos/"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count", is(1)));
