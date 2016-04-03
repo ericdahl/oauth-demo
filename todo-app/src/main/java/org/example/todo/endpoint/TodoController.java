@@ -2,6 +2,7 @@ package org.example.todo.endpoint;
 
 import org.example.todo.exception.AuthorizationException;
 import org.example.todo.model.Todo;
+import org.example.todo.model.TodoStats;
 import org.example.todo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,14 @@ public class TodoController {
 
     }
 
-    public List<Todo> getTodosInternal(final String username) {
+    @RequestMapping(value = "/todos", method = RequestMethod.GET)
+    public TodoStats getTodos() {
+        return todoService.getStats();
+    }
+
+
+
+    private List<Todo> getTodosInternal(final String username) {
         return todoService.getTodos(username);
     }
 }
