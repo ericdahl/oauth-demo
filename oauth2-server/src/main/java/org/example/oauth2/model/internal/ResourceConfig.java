@@ -10,13 +10,13 @@ import java.util.List;
 @ConfigurationProperties(prefix = "oauth2")
 public class ResourceConfig {
 
-    private List<ResourceConfig> resources = new ArrayList<ResourceConfig>();
+    private List<ResourcePathConfig> resources = new ArrayList<ResourcePathConfig>();
 
-    public List<ResourceConfig> getResources() {
+    public List<ResourcePathConfig> getResources() {
         return resources;
     }
 
-    public void setResources(List<ResourceConfig> resourceConfigs) {
+    public void setResources(List<ResourcePathConfig> resourceConfigs) {
         this.resources = resourceConfigs;
     }
 
@@ -25,5 +25,14 @@ public class ResourceConfig {
         return "ResourceListConfig{" +
                 "resources=" + resources +
                 '}';
+    }
+
+    public String findPath(String path) {
+        for (ResourcePathConfig resourcePathConfig : resources) {
+            if (resourcePathConfig.getPath().equals(path)) {
+                return resourcePathConfig.getTarget();
+            }
+        }
+        return null;
     }
 }

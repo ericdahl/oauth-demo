@@ -5,28 +5,37 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(TestApplication.class)
-@TestPropertySource("/short-expires-in.yml")
 public class ResourceConfigTest {
 
     @Autowired
     private ResourceConfig config;
 
     @Test
-    public void name() throws Exception {
+    public void shouldLoadProperties() throws Exception {
+        // TODO: remove this getter if possible
+        assertThat(config.getResources(), hasSize(2));
+    }
 
-        final List<ResourceConfig> resources = config.getResources();
-        assertThat(resources, hasSize(2));
+    @Test
+    public void shouldFindByPath() throws Exception {
+        assertThat(config.findPath("mypath"), is("mytarget"));
+    }
+
+    @Test
+    public void shouldReturnNullIfNoMatch() throws Exception {
+        assertThat(config.findPath("invalid"), is(nullValue()));
     }
 }
