@@ -8,8 +8,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,11 +29,11 @@ public class ResourceConfigTest {
 
     @Test
     public void shouldFindByPath() throws Exception {
-        assertThat(config.findPath("mypath"), is("mytarget"));
+        assertThat(config.findTarget("mypath").get(), is("mytarget"));
     }
 
     @Test
     public void shouldReturnNullIfNoMatch() throws Exception {
-        assertThat(config.findPath("invalid"), is(nullValue()));
+        assertThat(config.findTarget("invalid").isPresent(), is(false));
     }
 }

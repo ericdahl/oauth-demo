@@ -5,12 +5,13 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @ConfigurationProperties(prefix = "oauth2")
 public class ResourceConfig {
 
-    private List<ResourcePathConfig> resources = new ArrayList<ResourcePathConfig>();
+    private List<ResourcePathConfig> resources = new ArrayList<>();
 
     public List<ResourcePathConfig> getResources() {
         return resources;
@@ -27,12 +28,12 @@ public class ResourceConfig {
                 '}';
     }
 
-    public String findPath(String path) {
+    public Optional<String> findTarget(String path) {
         for (ResourcePathConfig resourcePathConfig : resources) {
             if (resourcePathConfig.getPath().equals(path)) {
-                return resourcePathConfig.getTarget();
+                return Optional.of(resourcePathConfig.getTarget());
             }
         }
-        return null;
+        return Optional.empty();
     }
 }
