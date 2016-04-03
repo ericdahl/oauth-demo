@@ -4,12 +4,11 @@ oauth2:
       url: http://localhost:8080/authenticate
   resources:
     -
-      path: mypath
-      target: mytarget
+      path: "mypath"
+      target: "mytarget"
     -
-      path: mypath
-      target: mytarget
-
-
-#    - one
-#    - two
+      path: "/mypath"
+      target: "mytarget"
+    -
+      path: "/todos"
+      target: "http://localhost:8080/todos"

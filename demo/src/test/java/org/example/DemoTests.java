@@ -50,7 +50,21 @@ public class DemoTests {
         getPasswordToken();
     }
 
-    @Ignore
+    @Test
+    public void shouldGetTodoStats() throws Exception {
+        String token = getPasswordToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        final HttpEntity httpEntity = new HttpEntity(headers);
+
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/todos", HttpMethod.GET, httpEntity, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON_UTF8));
+        assertThat(JsonPath.read(responseEntity.getBody(), "$.count"), is(1));
+    }
+
+    @Ignore("need mechanism to map URL varaibles to target")
     @Test
     public void shouldGetTodosViaToken() throws Exception {
 
@@ -61,9 +75,11 @@ public class DemoTests {
         final HttpEntity httpEntity = new HttpEntity(headers);
 
 
-        final ResponseEntity responseEntity = restTemplate.exchange(target + "/myusername/todos", HttpMethod.GET, httpEntity, String.class);
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos?123", HttpMethod.GET, httpEntity, String.class);
 
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+
+        assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON_UTF8));
     }
 
     private String getPasswordToken() {

@@ -45,7 +45,7 @@ public class TodoController {
 
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public TodoStats getTodos() {
         return todoService.getStats();
     }

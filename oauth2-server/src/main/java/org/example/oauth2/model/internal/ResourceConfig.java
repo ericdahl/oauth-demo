@@ -1,5 +1,6 @@
 package org.example.oauth2.model.internal;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +11,9 @@ import java.util.Optional;
 @Configuration
 @ConfigurationProperties(prefix = "oauth2")
 public class ResourceConfig {
+
+    @Value("${oauth2.resources.prefix:/go}")
+    private String resourcePrefix;
 
     private List<ResourcePathConfig> resources = new ArrayList<>();
 
@@ -29,8 +33,9 @@ public class ResourceConfig {
     }
 
     public Optional<String> findTarget(String path) {
+
         for (ResourcePathConfig resourcePathConfig : resources) {
-            if (resourcePathConfig.getPath().equals(path)) {
+            if ((resourcePrefix + resourcePathConfig.getPath()).equals(path)) {
                 return Optional.of(resourcePathConfig.getTarget());
             }
         }
