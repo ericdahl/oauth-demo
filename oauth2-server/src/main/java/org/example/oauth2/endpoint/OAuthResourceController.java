@@ -2,12 +2,15 @@ package org.example.oauth2.endpoint;
 
 import org.apache.commons.io.IOUtils;
 import org.example.oauth2.exception.ResourceNotFoundException;
+import org.example.oauth2.model.Token;
 import org.example.oauth2.model.internal.ResourceConfig;
+import org.example.oauth2.service.AuthTokenValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -27,15 +30,23 @@ public class OAuthResourceController {
     @Autowired
     private ResourceConfig resourceConfig;
 
+    @Autowired
+    private AuthTokenValidationService tokenValidationService;
+
+
+
     private RestTemplate restTemplate = new RestTemplate(); // TODO: configure
 
     @ResponseBody
     @RequestMapping("/go/**")
     public void handle(final HttpServletRequest request,
-                       final HttpServletResponse response) throws Exception {
+                       final HttpServletResponse response,
+                       @RequestHeader("Authorization") final String authorizationHeader) throws Exception {
 
         final String requestUri = request.getRequestURI();
         LOGGER.info("Processing [{}] request for [{}]", request.getMethod(), requestUri);
+
+        final Token token = tokenValidationService.validate(authorizationHeader);
 
         final Optional<String> target = resourceConfig.findTarget(requestUri);
         if (target.isPresent()) {

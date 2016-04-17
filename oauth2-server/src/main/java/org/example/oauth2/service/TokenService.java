@@ -12,7 +12,7 @@ import java.util.*;
 @Service
 public class TokenService {
 
-    private final Map<String, Token> tokens = new HashMap<String, Token>();
+    private final Map<String, Token> tokens = new HashMap<>();
 
     @Value("${accessToken.expiresInSeconds:3600}")
     private long expiresIn;
@@ -24,10 +24,10 @@ public class TokenService {
         return token;
     }
 
-    public Token validate(String accessToken) {
+    public Token validate(final String accessToken) {
         Token token = tokens.get(accessToken);
         if (token == null) {
-            throw new NoSuchTokenException();
+            throw new NoSuchTokenException(accessToken);
         } else if (token.isExpired()) {
             throw new ExpiredTokenException(token);
         }

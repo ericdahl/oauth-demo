@@ -64,6 +64,16 @@ public class DemoTests {
         assertThat(JsonPath.read(responseEntity.getBody(), "$.count"), is(1));
     }
 
+    @Test
+    public void shouldGet401ForInvalidToken() throws Exception {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer invalid");
+        final HttpEntity httpEntity = new HttpEntity(headers);
+
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/todos", HttpMethod.GET, httpEntity, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
     @Ignore("need mechanism to map URL varaibles to target")
     @Test
     public void shouldGetTodosViaToken() throws Exception {
@@ -83,7 +93,7 @@ public class DemoTests {
     }
 
     private String getPasswordToken() {
-        MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("grant_type", "password");
         form.add("username", "myusername");
         form.add("password", "mypassword");
