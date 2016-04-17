@@ -51,6 +51,11 @@ public class DemoTests {
     }
 
     @Test
+    public void shouldGetClientCredentialsToken() throws  Exception {
+        getClientCredentialsToken("myid", "mysecret");
+    }
+
+    @Test
     public void shouldGetTodoStats() throws Exception {
         String token = getPasswordToken();
 
@@ -67,6 +72,18 @@ public class DemoTests {
     @Test
     public void shouldNotGetOtherUsersTodo() throws Exception {
         String token = getPasswordToken("myusername2", "mypassword2");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        final HttpEntity httpEntity = new HttpEntity(headers);
+
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos", HttpMethod.GET, httpEntity, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
+    @Test
+    public void shouldNotGetTodoWithClientCredentialsToken() throws Exception {
+        String token = getClientCredentialsToken("myid", "mysecret");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
@@ -112,6 +129,20 @@ public class DemoTests {
         form.add("grant_type", "password");
         form.add("username", username);
         form.add("password", password);
+
+        final ResponseEntity<String> res = restTemplate.postForEntity(target + "/oauth/token", form, String.class);
+        assertThat(res.getStatusCode(), is(HttpStatus.OK));
+
+        final String token = JsonPath.read(res.getBody(), "$.access_token");
+        assertThat(token, is(notNullValue()));
+        return token;
+    }
+
+    private String getClientCredentialsToken(final String clientId, final String clientSecret) {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("grant_type", "client_credentials");
+        form.add("client_id", clientId);
+        form.add("client_secret", clientSecret);
 
         final ResponseEntity<String> res = restTemplate.postForEntity(target + "/oauth/token", form, String.class);
         assertThat(res.getStatusCode(), is(HttpStatus.OK));
