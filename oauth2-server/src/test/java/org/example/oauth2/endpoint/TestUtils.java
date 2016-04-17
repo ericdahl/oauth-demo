@@ -5,14 +5,10 @@ import org.example.oauth2.model.Token;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class TestUtils {
 
@@ -32,9 +28,7 @@ public class TestUtils {
                 .andExpect(jsonPath("$.token_type", is("bearer")))
                 .andReturn().getResponse().getContentAsString();
 
-        Token token = objectMapper.readValue(response, Token.class);
-
-        return token;
+        return objectMapper.readValue(response, Token.class);
     }
 
     public static Token getClientCredentialsToken(final MockMvc mockMvc, final String clientId,

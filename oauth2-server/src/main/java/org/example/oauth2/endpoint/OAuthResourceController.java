@@ -1,10 +1,7 @@
 package org.example.oauth2.endpoint;
 
 import org.apache.commons.io.IOUtils;
-import org.example.oauth2.exception.ResourceNotFoundException;
 import org.example.oauth2.model.Token;
-import org.example.oauth2.model.internal.ResourceConfig;
-import org.example.oauth2.model.internal.ResourcePathConfig;
 import org.example.oauth2.service.AuthTokenValidationService;
 import org.example.oauth2.service.ResourceResolver;
 import org.slf4j.Logger;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +22,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 public class OAuthResourceController {
@@ -36,7 +31,7 @@ public class OAuthResourceController {
     private final AuthTokenValidationService tokenValidationService;
     private final ResourceResolver resourceResolver;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public OAuthResourceController(final AuthTokenValidationService tokenValidationService,

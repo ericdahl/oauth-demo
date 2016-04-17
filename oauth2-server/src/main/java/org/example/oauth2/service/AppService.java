@@ -12,7 +12,7 @@ import java.util.UUID;
 @Service
 public class AppService {
 
-    private final Map<String, App> apps = new HashMap<String, App>();
+    private final Map<String, App> apps = new HashMap<>();
 
     public AppService() {
         apps.put("myid", new App("myid", "mysecret", "myapp", "mydeveloperusername")); // TODO: remove

@@ -1,15 +1,15 @@
 package org.example.oauth2.endpoint;
 
 import org.example.oauth2.exception.ErrorResponseException;
-import org.example.oauth2.exception.MissingAuthorizationHeaderException;
-import org.example.oauth2.model.*;
-import org.example.oauth2.service.*;
+import org.example.oauth2.model.App;
+import org.example.oauth2.model.ErrorResponse;
+import org.example.oauth2.model.Token;
+import org.example.oauth2.service.AppService;
+import org.example.oauth2.service.AuthTokenValidationService;
+import org.example.oauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RequestMapping("/oauth")
 @RestController

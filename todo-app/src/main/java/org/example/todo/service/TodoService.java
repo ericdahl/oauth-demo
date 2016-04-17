@@ -4,9 +4,10 @@ import org.example.todo.model.Todo;
 import org.example.todo.model.TodoStats;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TodoService {

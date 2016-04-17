@@ -3,7 +3,6 @@ package org.example.oauth2.endpoint;
 import org.example.oauth2.exception.AuthorizationException;
 import org.example.oauth2.service.UserService;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Primary

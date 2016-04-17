@@ -3,11 +3,12 @@ package org.example.oauth2.endpoint;
 import org.example.oauth2.model.App;
 import org.example.oauth2.service.AppService;
 import org.example.oauth2.service.TokenService;
-import org.example.oauth2.service.RemoteUserService;
 import org.example.oauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
