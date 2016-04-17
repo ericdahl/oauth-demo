@@ -64,7 +64,6 @@ public class DemoTests {
         assertThat(JsonPath.read(responseEntity.getBody(), "$.count"), is(1));
     }
 
-    @Ignore
     @Test
     public void shouldNotGetOtherUsersTodo() throws Exception {
         String token = getPasswordToken("myusername2", "mypassword2");
@@ -75,8 +74,6 @@ public class DemoTests {
 
         final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos", HttpMethod.GET, httpEntity, String.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
-        assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON_UTF8));
-        assertThat(JsonPath.read(responseEntity.getBody(), "$.count"), is(1));
     }
 
     @Test

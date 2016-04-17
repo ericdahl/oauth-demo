@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 @RequestMapping("/todos")
 @RestController
@@ -25,13 +26,17 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    @RequestMapping(value = "/{username}/todos", method = RequestMethod.GET)
-    public List<Todo> getTodos(@PathVariable String username) {
+    @RequestMapping(value = "/{username}/todos", method = RequestMethod.GET, headers = "X-username")
+    public List<Todo> getTodos(@PathVariable final String username,
+                               @RequestHeader("X-username") final String usernameHeader) {
+
+        if (!username.equals(usernameHeader)) {
+            throw new AuthorizationException("User [" + usernameHeader + "] is not allowed to access resource for user [" + username + "]");
+        }
         LOGGER.info("Getting todos for user [{}]", username);
 
         return getTodosInternal(username);
     }
-
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public TodoStats getTodos() {

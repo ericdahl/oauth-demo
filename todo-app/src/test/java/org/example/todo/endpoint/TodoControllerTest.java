@@ -40,7 +40,8 @@ public class TodoControllerTest {
 
     @Test
     public void shouldGetTodos() throws Exception {
-        mockMvc.perform(get("/todos/myusername/todos"))
+        mockMvc.perform(get("/todos/myusername/todos")
+                .header("X-username", "myusername"))
                 .andExpect(status().isOk());
     }
 
@@ -60,8 +61,6 @@ public class TodoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count", is(1)));
     }
-
-
 
 
 }
