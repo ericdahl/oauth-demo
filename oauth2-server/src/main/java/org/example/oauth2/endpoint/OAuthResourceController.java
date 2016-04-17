@@ -27,15 +27,16 @@ public class OAuthResourceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OAuthResourceController.class);
 
-    @Autowired
-    private ResourceConfig resourceConfig;
-
-    @Autowired
-    private AuthTokenValidationService tokenValidationService;
-
-
+    private final ResourceConfig resourceConfig;
+    private final AuthTokenValidationService tokenValidationService;
 
     private RestTemplate restTemplate = new RestTemplate(); // TODO: configure
+
+    @Autowired
+    public OAuthResourceController(ResourceConfig resourceConfig, AuthTokenValidationService tokenValidationService) {
+        this.resourceConfig = resourceConfig;
+        this.tokenValidationService = tokenValidationService;
+    }
 
     @ResponseBody
     @RequestMapping("/go/**")
