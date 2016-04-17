@@ -35,7 +35,7 @@ public class ResourceConfig {
     public Optional<String> findTarget(String path) {
 
         for (ResourcePathConfig resourcePathConfig : resources) {
-            if ((resourcePrefix + resourcePathConfig.getPath()).equals(path)) {
+            if (resourcePathConfig.matches(resourcePrefix, path)) {
                 return Optional.of(resourcePathConfig.getTarget());
             }
         }

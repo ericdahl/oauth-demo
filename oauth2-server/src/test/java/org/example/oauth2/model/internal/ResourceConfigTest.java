@@ -1,6 +1,7 @@
 package org.example.oauth2.model.internal;
 
 import org.example.oauth2.TestApplication;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -25,7 +28,7 @@ public class ResourceConfigTest {
     @Test
     public void shouldLoadProperties() throws Exception {
         // TODO: remove this getter if possible
-        assertThat(config.getResources(), hasSize(3));
+        assertThat(config.getResources(), hasSize(4));
     }
 
     @Test
@@ -36,6 +39,13 @@ public class ResourceConfigTest {
     @Test
     public void shouldReturnNullIfNoMatch() throws Exception {
         assertThat(config.findTarget("invalid").isPresent(), is(false));
+    }
+
+    @Ignore
+    @Test
+    public void shouldFindResourceWithVariable() throws Exception {
+        final Optional<String> target = config.findTarget("/myusername/todos");
+        assertThat(target.get(), is("/{username}/todos"));
     }
 
 }

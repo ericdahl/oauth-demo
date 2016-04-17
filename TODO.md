@@ -4,3 +4,4 @@
 - finish authorization token
 - basic auth http header
 - metadata endpoint for tokens
+- remove resource prefix /go

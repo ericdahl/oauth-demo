@@ -11,10 +11,11 @@ import java.util.Map;
 @Service
 public class UserService {
 
-    private final Map<String, User> users = new HashMap<String, User>();
+    private final Map<String, User> users = new HashMap<>();
 
     public UserService() {
         users.put("myusername", new User("myusername", "mypassword"));
+        users.put("myusername2", new User("myusername2", "mypassword2"));
     }
 
     public User authenticate(String username, String password) {
