@@ -14,4 +14,4 @@ oauth2:
       target: "http://localhost:8080/todos"
     -
       path: "/{username}/todos"
-      target: "http://localhost:8080/{username}/todos"
+      target: "http://localhost:8080/todos/{username}/todos"

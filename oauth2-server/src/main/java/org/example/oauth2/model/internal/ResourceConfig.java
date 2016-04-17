@@ -32,11 +32,11 @@ public class ResourceConfig {
                 '}';
     }
 
-    public Optional<String> findTarget(String path) {
+    public Optional<ResourcePathConfig> findTarget(String path) {
 
         for (ResourcePathConfig resourcePathConfig : resources) {
-            if (resourcePathConfig.matches(resourcePrefix, path)) {
-                return Optional.of(resourcePathConfig.getTarget());
+            if (resourcePathConfig.matches(resourcePrefix, path) != null) {
+                return Optional.of(resourcePathConfig);
             }
         }
         return Optional.empty();

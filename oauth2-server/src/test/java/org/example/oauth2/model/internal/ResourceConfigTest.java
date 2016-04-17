@@ -33,7 +33,7 @@ public class ResourceConfigTest {
 
     @Test
     public void shouldFindByPath() throws Exception {
-        assertThat(config.findTarget("/go/mypath").get(), is("mytarget"));
+        assertThat(config.findTarget("/go/mypath").get().getTarget(), is("mytarget"));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class ResourceConfigTest {
     @Ignore
     @Test
     public void shouldFindResourceWithVariable() throws Exception {
-        final Optional<String> target = config.findTarget("/myusername/todos");
-        assertThat(target.get(), is("/{username}/todos"));
+        final Optional<ResourcePathConfig> target = config.findTarget("/myusername/todos");
+        assertThat(target.get().getTarget(), is("/{username}/todos"));
     }
 
 }

@@ -1,9 +1,15 @@
 package org.example.oauth2.model.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public class ResourcePathConfig {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourcePathConfig.class);
 
     private String path;
     private String target;
@@ -33,9 +39,33 @@ public class ResourcePathConfig {
         this.target = target;
     }
 
-    public boolean matches(final String prefix,
+    public String matches(final String prefix,
                            final String candidatePath) {
-        return (prefix + path).equals(candidatePath);
+
+        final String prefixedPath = prefix + path;
+
+        LOGGER.info("comparing [{}] to candidate [{}]", prefixedPath, candidatePath);
+
+        final String[] candidateParts = candidatePath.split("/");
+        final String[] pathParts = prefixedPath.split("/");
+        if (candidateParts.length != pathParts.length) {
+            return null;
+        }
+
+        for (int i = 0; i < pathParts.length; ++i) {
+            final String candidatePart = candidateParts[i];
+            final String pathPart = pathParts[i];
+            if (!pathPartIsVariable(pathPart)) {
+                if (!pathPart.equals(candidatePart)) {
+                    return null;
+                }
+            }
+        }
+        return prefixedPath;
+    }
+
+    private static boolean pathPartIsVariable(final String pathPart) {
+        return pathPart.startsWith("{") && pathPart.endsWith("}"); // FIXME: hacky
     }
 
     @Override

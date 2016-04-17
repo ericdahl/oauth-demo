@@ -64,6 +64,7 @@ public class DemoTests {
         assertThat(JsonPath.read(responseEntity.getBody(), "$.count"), is(1));
     }
 
+    @Ignore
     @Test
     public void shouldNotGetOtherUsersTodo() throws Exception {
         String token = getPasswordToken("myusername2", "mypassword2");
@@ -88,7 +89,6 @@ public class DemoTests {
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
-    @Ignore("need mechanism to map URL varaibles to target")
     @Test
     public void shouldGetTodosViaToken() throws Exception {
 

@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class ResourcePathConfigTest {
@@ -12,17 +13,26 @@ public class ResourcePathConfigTest {
 
     @Test
     public void testSimpleMatch() throws Exception {
-        assertThat(new ResourcePathConfig("/mypath", "/mytarget").matches(PREFIX, "/go/mypath"), is(true));
+        assertThat(new ResourcePathConfig("/mypath", "/mytarget").matches(PREFIX, "/go/mypath"), is("/go/mypath"));
     }
 
     @Test
     public void testSimpleMismatch() throws Exception {
-        assertThat(new ResourcePathConfig("/mypath", "/mytarget").matches(PREFIX, "/foo"), is(false));
+        assertThat(new ResourcePathConfig("/mypath", "/mytarget").matches(PREFIX, "/foo"), is(nullValue()));
     }
 
-    @Ignore
     @Test
     public void testPatternMatch() throws Exception {
-        assertThat(new ResourcePathConfig("/{username}/mypath", "/mytarget").matches(PREFIX, "/foo/mypath"), is(true));
+        assertThat(new ResourcePathConfig("/{username}/mypath", "/mytarget").matches(PREFIX, "/go/foo/mypath"), is("/go/{username}/mypath"));
+    }
+
+    @Test
+    public void testPatternMismatchExtraPart() throws Exception {
+        assertThat(new ResourcePathConfig("/{username}/mypath/something", "/mytarget").matches(PREFIX, "/go/foo/mypath"), is(nullValue()));
+    }
+
+    @Test
+    public void testPatternMismatch() throws Exception {
+        assertThat(new ResourcePathConfig("/{username}/otherpath/", "/mytarget").matches(PREFIX, "/go/foo/mypath"), is(nullValue()));
     }
 }
