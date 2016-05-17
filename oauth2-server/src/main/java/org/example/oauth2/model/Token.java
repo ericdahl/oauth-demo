@@ -33,6 +33,7 @@ public class Token {
         return accessToken;
     }
 
+    @JsonProperty("expires_in")
     public long getExpiresIn() {
         return expiresIn;
     }
