@@ -1,17 +1,21 @@
 package org.example.oauth2.endpoint;
 
 import org.example.oauth2.Application;
+import org.example.oauth2.exception.NoSuchTokenException;
 import org.example.oauth2.model.Token;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -49,4 +53,13 @@ public class InternalTokenControllerTest {
                 .andExpect(jsonPath("$.token.access_token", is(token.getAccessToken())))
                 .andExpect(jsonPath("$.token.expires_in", is((int) token.getExpiresIn())));
     }
+
+    @Test
+    public void shouldReturn404UnknownToken() throws Exception {
+        mockMvc.perform(get(TOKEN_PATH, "unknown"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+
 }

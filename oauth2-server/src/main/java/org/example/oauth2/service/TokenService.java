@@ -34,9 +34,8 @@ public class TokenService {
 
     public Token validate(final String accessToken) {
         final Token token = tokenDAO.getToken(accessToken);
-        if (token == null) {
-            throw new NoSuchTokenException(accessToken);
-        } else if (token.isExpired()) {
+
+        if (token.isExpired()) {
             throw new ExpiredTokenException(token);
         }
 
