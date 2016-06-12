@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class TokenDAO {
@@ -23,5 +24,9 @@ public class TokenDAO {
 
     public void add(final Token token) {
         tokens.put(token.getAccessToken(), token);
+    }
+
+    public Set<String> getTokens() {
+        return tokens.keySet();
     }
 }

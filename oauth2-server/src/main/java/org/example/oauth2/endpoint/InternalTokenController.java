@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RequestMapping("/internal/tokens")
 @RestController
 public class InternalTokenController {
@@ -21,6 +23,12 @@ public class InternalTokenController {
     @RequestMapping("/{token}")
     public InternalTokenData getToken(@PathVariable final String token) {
         return new InternalTokenData(tokenDAO.getToken(token));
+    }
+
+    @RequestMapping("/")
+    public Set<String> getTokens() {
+        // TODO paging
+        return tokenDAO.getTokens();
     }
 
     @ExceptionHandler(NoSuchTokenException.class)

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(Application.class)
 public class InternalTokenControllerTest {
 
+    private static final String TOKENS_PATH = "/internal/tokens/";
     private static final String TOKEN_PATH = "/internal/tokens/{token}";
 
     @Autowired
@@ -59,6 +61,17 @@ public class InternalTokenControllerTest {
         mockMvc.perform(get(TOKEN_PATH, "unknown"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldLoadAllTokens() throws Exception {
+        final Token token = TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
+
+        mockMvc.perform(get(TOKENS_PATH))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
 
