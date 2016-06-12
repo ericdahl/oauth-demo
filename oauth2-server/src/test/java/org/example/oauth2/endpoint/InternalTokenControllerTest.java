@@ -46,7 +46,7 @@ public class InternalTokenControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.access_token", is(token.getAccessToken())))
-                .andExpect(jsonPath("$.expires_in", is((int) token.getExpiresIn())));
+                .andExpect(jsonPath("$.token.access_token", is(token.getAccessToken())))
+                .andExpect(jsonPath("$.token.expires_in", is((int) token.getExpiresIn())));
     }
 }

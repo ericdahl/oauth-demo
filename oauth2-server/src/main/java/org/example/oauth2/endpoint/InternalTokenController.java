@@ -1,7 +1,7 @@
 package org.example.oauth2.endpoint;
 
 import org.example.oauth2.dao.TokenDAO;
-import org.example.oauth2.model.Token;
+import org.example.oauth2.model.internal.InternalTokenData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ public class InternalTokenController {
     }
 
     @RequestMapping("/{token}")
-    public Token getToken(@PathVariable final String token) {
-        return tokenDAO.getToken(token);
+    public InternalTokenData getToken(@PathVariable final String token) {
+        return new InternalTokenData(tokenDAO.getToken(token));
     }
 }
