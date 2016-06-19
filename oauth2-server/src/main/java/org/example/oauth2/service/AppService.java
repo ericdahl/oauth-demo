@@ -19,11 +19,11 @@ public class AppService {
         this.appDAO = appDAO;
     }
 
-//    public App register(String name, String developerUsername) {
-//        final App app = new App(UUID.randomUUID().toString(), UUID.randomUUID().toString(), name, developerUsername);
-//        appDAO.save(app);
-//        return app;
-//    }
+    public App register(String name, String developerUsername) {
+        final App app = new App(UUID.randomUUID().toString(), UUID.randomUUID().toString(), name, developerUsername);
+        appDAO.save(app);
+        return app;
+    }
 
     public App getById(String clientId) {
 

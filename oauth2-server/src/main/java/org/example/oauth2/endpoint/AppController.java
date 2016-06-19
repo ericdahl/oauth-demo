@@ -2,6 +2,7 @@ package org.example.oauth2.endpoint;
 
 import org.example.oauth2.exception.ErrorResponseException;
 import org.example.oauth2.model.App;
+import org.example.oauth2.model.AppCreationRequest;
 import org.example.oauth2.model.ErrorResponse;
 import org.example.oauth2.model.Token;
 import org.example.oauth2.service.AppService;
@@ -53,8 +54,12 @@ public class AppController {
 
     @RequestMapping(value = "/apps",
                     method = RequestMethod.POST)
-    public App register() {
-        return null;
+    @ResponseStatus(HttpStatus.CREATED)
+    public App register(@RequestBody final AppCreationRequest appCreationRequest) {
+
+        final App app = appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper().getName());
+
+        return app;
     }
 
 

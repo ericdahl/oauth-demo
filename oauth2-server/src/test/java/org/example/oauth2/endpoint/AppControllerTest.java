@@ -1,5 +1,6 @@
 package org.example.oauth2.endpoint;
 
+import com.jayway.jsonpath.JsonPath;
 import org.example.oauth2.Application;
 import org.example.oauth2.model.Token;
 import org.hamcrest.Matchers;
@@ -17,9 +18,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,10 +56,31 @@ public class AppControllerTest {
                 .andExpect(jsonPath("$.name", Matchers.is("myapp")));
     }
 
-//    @Test
-//    public void shouldRegisterApp() throws Exception {
-//
-//    }
+    @Test
+    public void shouldRegisterApp() throws Exception {
+        final String response = mockMvc.perform(post(APPS_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"name\": \"mycustomapp\",\n" +
+                        "    \"developer\": {\n" +
+                        "        \"name\": \"mydevname\"\n" +
+                        "    }\n" +
+                        "}"))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.client_id", is(notNullValue())))
+                .andReturn().getResponse().getContentAsString();
+
+        final String clientId = JsonPath.read(response, "$.client_id");
+        final String clientSecret = JsonPath.read(response, "$.client_secret");
+
+        final Token token = TestUtils.getClientCredentialsToken(mockMvc, clientId, clientSecret);
+        mockMvc.perform(get(APP_PATH, "me")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.is("mycustomapp")));
+    }
 
 
 }
