@@ -1,5 +1,6 @@
 package org.example.oauth2.dao;
 
+import org.example.oauth2.exception.DuplicateAppException;
 import org.example.oauth2.model.App;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +12,31 @@ import java.util.Set;
 public class AppDAO {
 
     private final Map<String, App> apps = new HashMap<>();
+    private final Map<String, App> appsByAppName = new HashMap<>();
 
     public AppDAO() {
-        apps.put("myid", new App("myid", "mysecret", "myapp", "mydeveloperusername")); // TODO: remove
+        save(new App("myid", "mysecret", "myapp", "mydeveloperusername")); // TODO: remove
     }
 
 
     public void save(App app) {
+        if (apps.containsKey(app.getClientId())) {
+            throw new DuplicateAppException("App clientId already in use");
+        }
+        if (appsByAppName.containsKey(app.getName())) {
+            throw new DuplicateAppException("App name already in use");
+        }
+
         apps.put(app.getClientId(), app);
+        appsByAppName.put(app.getName(), app);
     }
 
     public App get(String clientId) {
         return apps.get(clientId);
+    }
+
+    public App getByName(final String name) {
+        return apps.get(name);
     }
 
     public Set<String> getClientIds() {

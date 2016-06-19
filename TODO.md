@@ -1,5 +1,4 @@
 - load app by id?
-- duplicate app names
 - register app tests
 - auth with base64?
 - resource config

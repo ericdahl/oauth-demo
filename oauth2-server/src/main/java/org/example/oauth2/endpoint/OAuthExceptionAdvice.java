@@ -1,9 +1,6 @@
 package org.example.oauth2.endpoint;
 
-import org.example.oauth2.exception.AuthorizationException;
-import org.example.oauth2.exception.ExpiredTokenException;
-import org.example.oauth2.exception.NoSuchTokenException;
-import org.example.oauth2.exception.ResourceNotFoundException;
+import org.example.oauth2.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,5 +33,11 @@ public class OAuthExceptionAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleNotFound(ResourceNotFoundException e) {
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handleDuplicateAppRegistration(DuplicateAppException e) {
+
     }
 }
