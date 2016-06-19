@@ -5,6 +5,8 @@ import org.example.oauth2.model.Token;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,5 +50,23 @@ public class TestUtils {
         Token token = objectMapper.readValue(response, Token.class);
 
         return token;
+    }
+
+    public static String registerApp(final MockMvc mockMvc,
+                                     final String appName,
+                                     final String developerUsername) throws Exception {
+        final String response = mockMvc.perform(post("/oauth/apps")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"name\": \"" + appName + "\",\n" +
+                        "    \"developer\": {\n" +
+                        "        \"name\": \"" + developerUsername + "\"\n" +
+                        "    }\n" +
+                        "}"))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.client_id", is(notNullValue())))
+                .andReturn().getResponse().getContentAsString();
+        return response;
     }
 }

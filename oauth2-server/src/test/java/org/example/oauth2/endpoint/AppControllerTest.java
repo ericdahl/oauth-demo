@@ -58,18 +58,7 @@ public class AppControllerTest {
 
     @Test
     public void shouldRegisterApp() throws Exception {
-        final String response = mockMvc.perform(post(APPS_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "    \"name\": \"mycustomapp\",\n" +
-                        "    \"developer\": {\n" +
-                        "        \"name\": \"mydevname\"\n" +
-                        "    }\n" +
-                        "}"))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.client_id", is(notNullValue())))
-                .andReturn().getResponse().getContentAsString();
+        final String response = TestUtils.registerApp(mockMvc, "mycustomapp", "mydevname");
 
         final String clientId = JsonPath.read(response, "$.client_id");
         final String clientSecret = JsonPath.read(response, "$.client_secret");
