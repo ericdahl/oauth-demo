@@ -7,7 +7,6 @@ import org.example.oauth2.model.ErrorResponse;
 import org.example.oauth2.model.Token;
 import org.example.oauth2.service.AppService;
 import org.example.oauth2.service.AuthTokenValidationService;
-import org.example.oauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +17,12 @@ public class AppController {
 
     private final AuthTokenValidationService authTokenValidationService;
     private final AppService appService;
-    private final UserService userService;
 
     @Autowired
     public AppController(final AuthTokenValidationService authTokenValidationService,
-                         final AppService appService,
-                         final UserService userService) {
+                         final AppService appService) {
         this.authTokenValidationService = authTokenValidationService;
         this.appService = appService;
-        this.userService = userService;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
