@@ -1,11 +1,15 @@
 package org.example.oauth2.endpoint;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.example.oauth2.exception.AuthorizationException;
+import org.example.oauth2.exception.BadRequestException;
 import org.example.oauth2.exception.ErrorResponseException;
 import org.example.oauth2.model.*;
 import org.example.oauth2.service.AppService;
 import org.example.oauth2.service.TokenService;
 import org.example.oauth2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +48,30 @@ public class TokenController {
                                        @RequestParam("password") final String password) {
         userService.authenticate(username, password);
 //        return new TokenResponse(tokenService.generate(clientId));
+        Token token = tokenService.generate("myid", username);
+
+        return new TokenResponse(token);
+    }
+
+    @RequestMapping(value = "/token",
+            method = RequestMethod.POST,
+            params = {"grant_type=password"},
+            headers = {HttpHeaders.AUTHORIZATION},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public TokenResponse passwordTokenWithAuthHeader(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        if (!authorizationHeader.startsWith("Basic ")) {
+            throw new BadRequestException("Not valid authorization header");
+        }
+        authorizationHeader = authorizationHeader.replaceFirst("^Basic ", "");
+        final byte[] bytes = Base64.decodeBase64(authorizationHeader);
+        final String[] split = new String(bytes).split(":");
+        if (split.length != 2) {
+            throw new BadRequestException("Not a valid authorization header");
+        }
+        final String username = split[0];
+        final String password = split[1];
+
+        userService.authenticate(username, password);
         Token token = tokenService.generate("myid", username);
 
         return new TokenResponse(token);

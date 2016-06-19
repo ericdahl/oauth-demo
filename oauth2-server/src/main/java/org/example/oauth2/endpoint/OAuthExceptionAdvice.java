@@ -40,4 +40,10 @@ public class OAuthExceptionAdvice {
     public void handleDuplicateAppRegistration(DuplicateAppException e) {
 
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleBadRequest(BadRequestException e) {
+
+    }
 }

@@ -2,6 +2,7 @@ package org.example.oauth2.endpoint;
 
 import org.example.oauth2.Application;
 import org.example.oauth2.model.Token;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,4 +91,26 @@ public class TokenControllerTest {
                 .andExpect(jsonPath("$.error_description", is("Missing mandatory fields [grant_type]")));
     }
 
+    @Test
+    public void shouldGetPasswordTokenViaAuthorizationHeader() throws Exception {
+        mockMvc.perform(post("/oauth/token")
+                .param("grant_type", "password")
+                .with(httpBasic("myusername", "mypassword")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.access_token", is(notNullValue())))
+                .andExpect(jsonPath("$.expires_in", is(greaterThan(0))))
+                .andExpect(jsonPath("$.token_type", is("bearer")))
+                .andReturn().getResponse().getContentAsString();
+    }
+
+    @Test
+    public void shouldRefusePasswordTokenWithBadPassword() throws Exception {
+        mockMvc.perform(post("/oauth/token")
+                .param("grant_type", "password")
+                .with(httpBasic("myusername", "badpassword")))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 }
