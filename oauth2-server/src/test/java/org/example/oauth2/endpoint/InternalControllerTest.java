@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,10 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(Application.class)
-public class InternalTokenControllerTest {
+public class InternalControllerTest {
 
-    private static final String TOKENS_PATH = "/internal/tokens/";
+
     private static final String TOKEN_PATH = "/internal/tokens/{token}";
+    private static final String TOKENS_PATH = "/internal/tokens/";
+
+    private static final String CLIENTS_PATH = "/internal/clients/";
+    private static final String CLIENT_PATH = "/internal/clients/{client_id}";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -65,14 +70,36 @@ public class InternalTokenControllerTest {
 
     @Test
     public void shouldLoadAllTokens() throws Exception {
-        final Token token = TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
+        TestUtils.getPasswordToken(mockMvc, "myusername", "mypassword");
 
         mockMvc.perform(get(TOKENS_PATH))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(1))));
     }
+
+    @Test
+    public void shouldLoadAllClients() throws Exception {
+        mockMvc.perform(get(CLIENTS_PATH))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0]", is("myid")));
+    }
+
+    @Test
+    public void shouldLoadClient() throws Exception {
+        mockMvc.perform(get(CLIENT_PATH, "myid"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.client_id", is("myid")))
+                .andExpect(jsonPath("$.client_secret", is("mysecret")));
+    }
+
+
 
 
 }

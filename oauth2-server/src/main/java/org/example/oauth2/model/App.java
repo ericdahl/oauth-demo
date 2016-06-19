@@ -1,6 +1,7 @@
 package org.example.oauth2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class App {
     private final String name;
@@ -20,11 +21,13 @@ public class App {
         return name;
     }
 
+    @JsonProperty("client_id")
     public String getClientId() {
         return clientId;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonProperty("client_secret")
     public String getClientSecret() {
         return clientSecret;
     }
