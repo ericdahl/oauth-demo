@@ -1,3 +1,5 @@
+- register app tests
+- auth with base64?
 - resource config
     - and use map
 - add refresh token support

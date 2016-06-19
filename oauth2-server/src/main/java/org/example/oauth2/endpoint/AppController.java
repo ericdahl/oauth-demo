@@ -51,6 +51,14 @@ public class AppController {
         return appService.getById(token.getClientId());
     }
 
+    @RequestMapping(value = "/apps",
+                    method = RequestMethod.POST)
+    public App register() {
+        return null;
+    }
+
+
+
 
 
 }
