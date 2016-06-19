@@ -1,6 +1,5 @@
 package org.example.oauth2.endpoint;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.oauth2.Application;
 import org.example.oauth2.model.Token;
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,9 +28,6 @@ public class TokenControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private MockMvc mockMvc;
 
     @Before
@@ -42,12 +37,12 @@ public class TokenControllerTest {
 
     @Test
     public void shouldGetToken() throws Exception {
-        getToken("myid", "mysecret", "client_credentials");
+        TestUtils.getClientCredentialsToken(mockMvc, "myid", "mysecret");
     }
 
     @Test
     public void shouldLoadAppWithToken() throws Exception {
-        Token token = getToken("myid", "mysecret", "client_credentials");
+        final Token token = TestUtils.getClientCredentialsToken(mockMvc, "myid", "mysecret");
 
         mockMvc.perform(get("/oauth/apps/me")
                 .header("Authorization", "Bearer " + token.getAccessToken()))
@@ -57,14 +52,12 @@ public class TokenControllerTest {
 
     @Test
     public void shouldVerifyClientSecret() throws Exception {
-
         mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "client_credentials")
                 .param("client_id", "myid")
                 .param("client_secret", "invalid"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
-
     }
 
     @Test
@@ -74,28 +67,11 @@ public class TokenControllerTest {
 
     @Test
     public void shouldErrorOnBadPassword() throws Exception {
-
         mockMvc.perform(post("/oauth/token")
                 .param("grant_type", "password")
                 .param("username", "myusername")
                 .param("password", "invalid"))
                 .andExpect(status().isUnauthorized());
-    }
-
-    private Token getToken(final String clientId,
-                           final String clientSecret,
-                           final String grantType) throws Exception {
-        String response = mockMvc.perform(post("/oauth/token")
-                .param("grant_type", grantType)
-                .param("client_id", clientId)
-                .param("client_secret", clientSecret))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.access_token", is(notNullValue())))
-                .andReturn().getResponse().getContentAsString();
-
-        return objectMapper.readValue(response, Token.class);
     }
 
     @Test
