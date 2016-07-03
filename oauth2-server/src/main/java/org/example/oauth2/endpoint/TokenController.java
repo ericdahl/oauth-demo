@@ -36,8 +36,8 @@ public class TokenController {
                     params = {"grant_type=client_credentials", "client_id", "client_secret"})
     public TokenResponse clientCredentials(@RequestParam("client_id") String clientId,
                                            @RequestParam("client_secret") String clientSecret) {
-        final App app = appService.authenticate(clientId, clientSecret);
-        return new TokenResponse(tokenService.generate(clientId, app.getDeveloperUsername()));
+        appService.authenticate(clientId, clientSecret);
+        return new TokenResponse(tokenService.generate(clientId, null));
     }
 
     @RequestMapping(value = "/token",

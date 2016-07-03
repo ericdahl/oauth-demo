@@ -55,11 +55,28 @@ public class DemoTests {
     }
 
     @Test
+    public void shouldGetAppByClientCredentialsToken() throws Exception {
+        final String token = getClientCredentialsToken("myid", "mysecret");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        final HttpEntity httpEntity = new HttpEntity(headers);
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/oauth/apps/me", HttpMethod.GET, httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseEntity.getHeaders().getContentType(), is(MediaType.APPLICATION_JSON_UTF8));
+
+        final String json = responseEntity.getBody();
+        assertThat(JsonPath.read(json, "$.developer.name"), is("mydeveloperusername"));
+        assertThat(JsonPath.read(json, "$.client_id"), is("myid"));
+    }
+
+    @Test
     public void shouldGetTodoStats() throws Exception {
         String token = getPasswordToken();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         final HttpEntity httpEntity = new HttpEntity(headers);
 
         final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/todos", HttpMethod.GET, httpEntity, String.class);
@@ -73,7 +90,7 @@ public class DemoTests {
         String token = getPasswordToken("myusername2", "mypassword2");
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         final HttpEntity httpEntity = new HttpEntity(headers);
 
         final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos", HttpMethod.GET, httpEntity, String.class);
@@ -85,7 +102,7 @@ public class DemoTests {
         String token = getClientCredentialsToken("myid", "mysecret");
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         final HttpEntity httpEntity = new HttpEntity(headers);
 
         final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos", HttpMethod.GET, httpEntity, String.class);
@@ -95,7 +112,7 @@ public class DemoTests {
     @Test
     public void shouldGet401ForInvalidToken() throws Exception {
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer invalid");
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer invalid");
         final HttpEntity httpEntity = new HttpEntity(headers);
 
         final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/todos", HttpMethod.GET, httpEntity, String.class);
@@ -108,7 +125,7 @@ public class DemoTests {
         String token = getPasswordToken();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + token);
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         final HttpEntity httpEntity = new HttpEntity(headers);
 
 

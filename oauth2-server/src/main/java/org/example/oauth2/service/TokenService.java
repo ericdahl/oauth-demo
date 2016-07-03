@@ -2,15 +2,12 @@ package org.example.oauth2.service;
 
 import org.example.oauth2.dao.TokenDAO;
 import org.example.oauth2.exception.ExpiredTokenException;
-import org.example.oauth2.exception.NoSuchTokenException;
 import org.example.oauth2.model.Token;
 import org.example.oauth2.model.TokenType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service

@@ -4,6 +4,7 @@ import org.example.oauth2.dao.AppDAO;
 import org.example.oauth2.exception.AuthorizationException;
 import org.example.oauth2.exception.NoSuchAppException;
 import org.example.oauth2.model.App;
+import org.example.oauth2.model.Developer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class AppService {
         this.appDAO = appDAO;
     }
 
-    public App register(String name, String developerUsername) {
-        final App app = new App(UUID.randomUUID().toString(), UUID.randomUUID().toString(), name, developerUsername);
+    public App register(String name, Developer developer) {
+        final App app = new App(UUID.randomUUID().toString(), UUID.randomUUID().toString(), name, developer);
         appDAO.save(app);
         return app;
     }

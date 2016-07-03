@@ -2,6 +2,7 @@ package org.example.oauth2.dao;
 
 import org.example.oauth2.exception.DuplicateAppException;
 import org.example.oauth2.model.App;
+import org.example.oauth2.model.Developer;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,7 +16,8 @@ public class AppDAO {
     private final Map<String, App> appsByAppName = new HashMap<>();
 
     public AppDAO() {
-        save(new App("myid", "mysecret", "myapp", "mydeveloperusername")); // TODO: remove
+        final Developer developer = new Developer("mydeveloperusername");
+        save(new App("myid", "mysecret", "myapp", developer)); // TODO: remove
     }
 
 

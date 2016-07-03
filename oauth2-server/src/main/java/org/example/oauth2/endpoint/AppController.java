@@ -53,7 +53,7 @@ public class AppController {
     @ResponseStatus(HttpStatus.CREATED)
     public App register(@RequestBody final AppCreationRequest appCreationRequest) {
 
-        final App app = appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper().getName());
+        final App app = appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper());
 
         return app;
     }

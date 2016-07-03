@@ -1,20 +1,19 @@
 package org.example.oauth2.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class App {
     private final String name;
     private final String clientId;
     private final String clientSecret;
-    private final String developerUsername;
+    private final Developer developer;
 
-    public App(String clientId, String clientSecret, String name, String developerUsername) {
+    public App(String clientId, String clientSecret, String name, Developer developer) {
 
         this.clientId = clientId;
         this.name = name;
         this.clientSecret = clientSecret;
-        this.developerUsername = developerUsername;
+        this.developer = developer;
     }
 
     public String getName() {
@@ -32,7 +31,8 @@ public class App {
         return clientSecret;
     }
 
-    public String getDeveloperUsername() {
-        return developerUsername;
+    @JsonProperty("developer")
+    public Developer getDeveloper() {
+        return developer;
     }
 }
