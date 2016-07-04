@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequestMapping("/oauth")
 @RestController
 public class AppController {
@@ -50,9 +52,9 @@ public class AppController {
     @RequestMapping(value = "/apps",
                     method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public App register(@RequestBody final AppCreationRequest appCreationRequest) {
+    public App register(@RequestBody @Valid final AppCreationRequest appCreationRequest) {
 
-        return appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper());
+        return appService.register(appCreationRequest);
     }
 
 }

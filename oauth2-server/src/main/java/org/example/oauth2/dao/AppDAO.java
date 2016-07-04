@@ -5,9 +5,7 @@ import org.example.oauth2.model.App;
 import org.example.oauth2.model.Developer;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AppDAO {
@@ -17,7 +15,7 @@ public class AppDAO {
 
     public AppDAO() {
         final Developer developer = new Developer("mydeveloperusername");
-        save(new App("myid", "mysecret", "myapp", developer)); // TODO: remove
+        save(new App("myid", "mysecret", "myapp", developer, new HashSet<>(Arrays.asList("todos:read")))); // TODO: remove
     }
 
 
