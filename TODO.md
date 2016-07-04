@@ -1,4 +1,5 @@
 - load app by id?
+- internal users endpoint
 - resource config
     - and use map
 - add refresh token support
