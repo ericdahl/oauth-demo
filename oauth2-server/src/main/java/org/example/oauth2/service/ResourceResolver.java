@@ -1,6 +1,7 @@
 package org.example.oauth2.service;
 
 import org.example.oauth2.exception.ResourceNotFoundException;
+import org.example.oauth2.model.internal.ResolvedResource;
 import org.example.oauth2.model.internal.ResourceConfig;
 import org.example.oauth2.model.internal.ResourcePathConfig;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class ResourceResolver {
         this.prefix = prefix;
     }
 
-    public String resolve(final String path) {
+    public ResolvedResource resolve(final String path) {
 
         final ResourcePathConfig pathConfig = resourceConfig
                 .findTarget(path)
@@ -46,6 +47,6 @@ public class ResourceResolver {
             }
         }
 
-        return target;
+        return new ResolvedResource(target, pathConfig);
     }
 }

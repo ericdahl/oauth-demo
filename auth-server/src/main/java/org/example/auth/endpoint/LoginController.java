@@ -30,7 +30,6 @@ public class LoginController {
                             @RequestParam("password") final String password) {
 
         final User user = userService.authenticate(username, password);
-        System.err.println("setting session variable");
         httpSession.setAttribute("username", username);
     }
 

@@ -27,14 +27,10 @@ public class ResourceResolverTest {
         when(mockResourceConfig.findTarget(eq("/go/myusername/todos"))).thenReturn(Optional.of(mockResourcePathConfig));
 
         resolver = new ResourceResolver(mockResourceConfig, "/go");
-
-
-
     }
 
     @Test
-    public void name() throws Exception {
-        assertThat(resolver.resolve("/go/myusername/todos"), is("http://localhost:8080/myusername/todos"));
-
+    public void shouldResolve() throws Exception {
+        assertThat(resolver.resolve("/go/myusername/todos").getTarget(), is("http://localhost:8080/myusername/todos"));
     }
 }

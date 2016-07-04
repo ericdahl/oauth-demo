@@ -52,7 +52,6 @@ public class LoginControllerTest {
         final MultiValueMap<String, String> formData = payload("myusername", "mypassword");
         final ResponseEntity<String> responseEntity = restTemplate.postForEntity(target + "/login", formData, String.class);
 
-        System.err.println(responseEntity.getBody());
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(responseEntity.getHeaders().get(HttpHeaders.SET_COOKIE), not(empty()));
         assertThat(responseEntity.getHeaders().get(HttpHeaders.SET_COOKIE).get(0), containsString("JSESSIONID"));
@@ -63,7 +62,6 @@ public class LoginControllerTest {
         final MultiValueMap<String, String> formData = payload("myusername", "mypassword");
         final ResponseEntity<String> responseEntity = restTemplate.postForEntity(target + "/authenticate", formData, String.class);
 
-        System.err.println(responseEntity.getBody());
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     }
 
@@ -74,7 +72,6 @@ public class LoginControllerTest {
         final MultiValueMap<String, String> formData = payload("myusername", "invalid");
         final ResponseEntity<String> responseEntity = restTemplate.postForEntity(target + "/login", formData, String.class);
 
-        System.err.println(responseEntity.getBody());
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
         // should it do this? nothing is set in session..
 //        assertThat(responseEntity.getHeaders().get(HttpHeaders.SET_COOKIE), is(empty()));

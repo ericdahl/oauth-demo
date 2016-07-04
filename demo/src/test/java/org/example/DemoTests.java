@@ -16,6 +16,10 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -86,6 +90,18 @@ public class DemoTests {
     }
 
     @Test
+    public void shouldNotGetTodoWithoutNecessaryScope() throws Exception {
+        String token = getPasswordToken("myusername", "mypassword", Collections.emptySet());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        final HttpEntity httpEntity = new HttpEntity(headers);
+
+        final ResponseEntity<String> responseEntity = restTemplate.exchange(target + "/go/myusername/todos", HttpMethod.GET, httpEntity, String.class);
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
+    @Test
     public void shouldNotGetOtherUsersTodo() throws Exception {
         String token = getPasswordToken("myusername2", "mypassword2");
 
@@ -141,10 +157,23 @@ public class DemoTests {
     }
 
     private String getPasswordToken(final String username, final String password) {
-        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+
+
+
+        return getPasswordToken(username, password, new HashSet<>(Arrays.asList("todos:read")));
+    }
+
+    private String getPasswordToken(final String username,
+                                    final String password,
+                                    final Set<String> scopes) {
+        MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
         form.add("grant_type", "password");
         form.add("username", username);
         form.add("password", password);
+
+        for (String scope : scopes) {
+            form.add("scope", scope);
+        }
 
         final ResponseEntity<String> res = restTemplate.postForEntity(target + "/oauth/token", form, String.class);
         assertThat(res.getStatusCode(), is(HttpStatus.OK));

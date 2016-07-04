@@ -1,7 +1,9 @@
 package org.example.oauth2.endpoint;
 
 import org.apache.commons.io.IOUtils;
+import org.example.oauth2.exception.AuthorizationException;
 import org.example.oauth2.model.Token;
+import org.example.oauth2.model.internal.ResolvedResource;
 import org.example.oauth2.service.AuthTokenValidationService;
 import org.example.oauth2.service.ResourceResolver;
 import org.slf4j.Logger;
@@ -59,7 +61,11 @@ public class OAuthResourceController {
 
         final Token token = tokenValidationService.validate(authorizationHeader);
 
-        final String target = resourceResolver.resolve(requestUri);
+        final ResolvedResource resolvedResource = resourceResolver.resolve(requestUri);
+        validateAccess(token, resolvedResource);
+
+        final String target = resolvedResource.getTarget();
+
         final HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
 
         LOGGER.info("[{}] [{}]", httpMethod, target);
@@ -81,5 +87,16 @@ public class OAuthResourceController {
         }
         response.setStatus(responseEntity.getStatusCode().value());
         IOUtils.write(responseEntity.getBody(), response.getOutputStream());
+    }
+
+    private void validateAccess(Token token, ResolvedResource resolvedResource) {
+        token.getScopes();
+        final String requiredScope = resolvedResource.getRequiredScope();
+
+        if (requiredScope != null) {
+            if (!token.getScopes().contains(requiredScope)) {
+                throw new AuthorizationException("Not authorized to access resource with scope [ " + requiredScope + "]");
+            }
+        }
     }
 }

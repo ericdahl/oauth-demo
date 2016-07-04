@@ -9,6 +9,7 @@ public class ResourcePathConfig {
 
     private String path;
     private String target;
+    private String requiredScope;
 
 
     public ResourcePathConfig() {
@@ -17,6 +18,14 @@ public class ResourcePathConfig {
     public ResourcePathConfig(String path, String target) {
         this.path = path;
         this.target = target;
+    }
+
+    public String getRequiredScope() {
+        return requiredScope;
+    }
+
+    public void setRequiredScope(String requiredScope) {
+        this.requiredScope = requiredScope;
     }
 
     public String getPath() {

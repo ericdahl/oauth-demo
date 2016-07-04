@@ -39,11 +39,11 @@ public class ResourceConfigTest {
         assertThat(config.findTarget("invalid").isPresent(), is(false));
     }
 
-    @Ignore
     @Test
     public void shouldFindResourceWithVariable() throws Exception {
-        final Optional<ResourcePathConfig> target = config.findTarget("/myusername/todos");
-        assertThat(target.get().getTarget(), is("/{username}/todos"));
+        final Optional<ResourcePathConfig> target = config.findTarget("/go/myusername/todos");
+        assertThat(target.get().getTarget(), is("http://localhost:8080/todos/{username}/todos"));
+        assertThat(target.get().getRequiredScope(), is("todos:read"));
     }
 
 }

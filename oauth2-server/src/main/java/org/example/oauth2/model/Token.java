@@ -3,11 +3,15 @@ package org.example.oauth2.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collections;
+import java.util.Set;
+
 public class Token {
     private final String accessToken;
     private final String clientId;
     private final String username;
     private final TokenType tokenType;
+    private final Set<String> scopes;
 
     private final long generatedAt;
     private final long expiresIn;
@@ -18,13 +22,15 @@ public class Token {
                  @JsonProperty("client_id") String clientId,
                  @JsonProperty("username") String username,
                  @JsonProperty("generatedAt") long generatedAtMillis,
-                 @JsonProperty("expires_in") long expiresInSeconds) {
+                 @JsonProperty("expires_in") long expiresInSeconds,
+                 @JsonProperty("scope") final Set<String> scopes) {
         this.accessToken = accessToken;
         this.tokenType = TokenType.getByName(tokenType);
         this.clientId = clientId;
         this.username = username;
         this.generatedAt = generatedAtMillis;
         this.expiresIn = expiresInSeconds;
+        this.scopes = scopes;
     }
 
 
@@ -67,5 +73,10 @@ public class Token {
 
     public boolean isExpired() {
         return System.currentTimeMillis() > getExpiresAt();
+    }
+
+    @JsonProperty("scope")
+    public Set<String> getScopes() {
+        return scopes == null ? Collections.emptySet() : scopes;
     }
 }

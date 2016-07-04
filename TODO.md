@@ -1,3 +1,4 @@
+- resource http methods linked to scopes
 - load app by id?
 - internal users endpoint
 - resource config

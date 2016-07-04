@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RequestMapping("/oauth")
 @RestController
 public class TokenController {
@@ -45,10 +47,10 @@ public class TokenController {
             params = {"grant_type=password", "username", "password"},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public TokenResponse passwordToken(@RequestParam("username") final String username,
-                                       @RequestParam("password") final String password) {
+                                       @RequestParam("password") final String password,
+                                       @RequestParam(value = "scope", required = false) final Set<String> scopes) {
         userService.authenticate(username, password);
-//        return new TokenResponse(tokenService.generate(clientId));
-        Token token = tokenService.generate("myid", username);
+        final Token token = tokenService.generate("myid", username, scopes);
 
         return new TokenResponse(token);
     }
