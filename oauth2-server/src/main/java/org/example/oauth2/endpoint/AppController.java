@@ -1,5 +1,6 @@
 package org.example.oauth2.endpoint;
 
+import org.example.oauth2.exception.AuthorizationException;
 import org.example.oauth2.exception.ErrorResponseException;
 import org.example.oauth2.model.App;
 import org.example.oauth2.model.AppCreationRequest;
@@ -39,13 +40,11 @@ public class AppController {
 
         Token token = authTokenValidationService.validate(authorizationHeader);
 
-        if (appId.equals("me")) {
-            appId = token.getClientId();
-        } else {
-            throw new UnsupportedOperationException();
+        if ("me".equals(appId) || appId.equals(token.getClientId())) {
+            return appService.getById(token.getClientId());
         }
 
-        return appService.getById(token.getClientId());
+        throw new AuthorizationException("client [" + token.getClientId() + "] not authorized to access app [" + appId + "]");
     }
 
     @RequestMapping(value = "/apps",
@@ -53,13 +52,7 @@ public class AppController {
     @ResponseStatus(HttpStatus.CREATED)
     public App register(@RequestBody final AppCreationRequest appCreationRequest) {
 
-        final App app = appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper());
-
-        return app;
+        return appService.register(appCreationRequest.getName(), appCreationRequest.getDeveloper());
     }
-
-
-
-
 
 }

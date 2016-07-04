@@ -34,7 +34,6 @@ public class AppControllerTest {
 
 
     private static final String APP_PATH = "/oauth/apps/{app_id}";
-    private static final String APPS_PATH = "/oauth/apps";
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -58,6 +57,17 @@ public class AppControllerTest {
     }
 
     @Test
+    public void shouldLoadAppById() throws Exception {
+        final Token token = TestUtils.getClientCredentialsToken(mockMvc, "myid", "mysecret");
+
+        mockMvc.perform(get(APP_PATH, "myid")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", Matchers.is("myapp")));
+    }
+
+    @Test
     public void shouldRegisterApp() throws Exception {
         final String response = TestUtils.registerApp(mockMvc, "mycustomapp", "mydevname");
 
@@ -70,6 +80,17 @@ public class AppControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", Matchers.is("mycustomapp")));
+    }
+
+    @Test
+    public void shouldNotAllowAccessToOtherApp() throws Exception {
+        final String json = TestUtils.registerApp(mockMvc, "mycustomapp3", "mydevname");
+        final Token token = TestUtils.getClientCredentialsToken(mockMvc, "myid", "mysecret");
+
+        mockMvc.perform(get(APP_PATH, (String) JsonPath.read(json, "$.client_id"))
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
